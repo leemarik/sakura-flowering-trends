@@ -1,44 +1,65 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw data 
+# Author: Mariko Lee
+# Date: 19 November 2024
+# Contact: mariko.lee@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: None
 
 #### Workspace setup ####
 library(tidyverse)
+library(lubridate)
 
-#### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+# Load datasets
+historical <- read_csv("data/01-raw_data/sakura-historical.csv")
+modern <- read_csv("data/01-raw_data/sakura-modern.csv")
+temperatures <- read_csv("data/01-raw_data/temperatures-modern.csv")
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
+# Clean historical dataset
+historical <- historical %>%
+  select(year, flower_date, temp_c_recon) %>%  
+  rename(
+    flowering_date = flower_date,
+    temperature_recon = temp_c_recon
+  ) %>%
+  mutate(flowering_date = ymd(flowering_date)) 
+
+# Clean modern dataset
+modern <- modern %>%
+  select(year, flower_date, full_bloom_date, latitude, longitude) %>%  # Relevant columns
+  rename(
+    flowering_date = flower_date,     
+    full_bloom_date = full_bloom_date,  
+    lat = latitude,
+    lon = longitude
+  ) %>%
+  mutate(flowering_date = ymd(flowering_date),
+         full_bloom_date = ymd(full_bloom_date))
+
+# Clean temperatures dataset
+temperatures <- temperatures %>%
+  filter(month == "03") %>% 
+  select(year, mean_temp_c) %>% 
+  rename(avg_temperature = mean_temp_c)
+
+# Combine historical and modern flowering data
+sakura <- bind_rows(historical, modern)
+
+# Join with temperature data
+sakura <- sakura %>%
+  left_join(temperatures, by = "year")
+
+# Remove rows with missing flowering dates
+sakura <- sakura %>%
+  filter(!is.na(flowering_date))
+
+# Add derived columns
+sakura <- sakura %>%
   mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
+    day_of_year = yday(flowering_date),  
+    decade = floor(year / 10) * 10    
+  )
 
-#### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+# Save the cleaned dataset
+write_csv(sakura, "data/02-analysis_data/sakura_cleaned.csv")
+
