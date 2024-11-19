@@ -2,7 +2,7 @@
 
 ## Overview
 
-
+This study analyzes the long-term trends and their relationship with climate change using data of over 1,200 years of cherry blossom (sakura) flowering dates in Kyoto sourced from the [Alex Cookson’s datasets](https://github.com/tacookson/data).
 
 ## File Structure
 
@@ -19,11 +19,3 @@ The repo is structured as:
 ## Statement on LLM usage
 
 Aspects of the code were written with the help of the auto-complete tool, Codriver. The abstract and introduction were written with the help of ChatHorse and the entire chat history is available in inputs/llms/usage.txt.
-
-## Some checks
-
-- [ ] Change the rproj file name so that it's not starter_folder.Rproj
-- [ ] Change the README title so that it's not Starter folder
-- [ ] Remove files that you're not using
-- [ ] Update comments in R scripts
-- [ ] Remove this checklist
