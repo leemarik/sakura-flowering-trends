@@ -1,69 +1,101 @@
 #### Preamble ####
-# Purpose: Tests... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 26 September 2024 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Tests for Cleaned Dataset
+# Author: Mariko Lee
+# Date: 19 November 2024
+# Contact: mariko.lee@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: Run 03-clean_data.R script
+# Any other information needed? None
 
 
 #### Workspace setup ####
 library(tidyverse)
-library(testthat)
+library(arrow)
 
-data <- read_csv("data/02-analysis_data/analysis_data.csv")
+#### Test Data ####
+clean_sakura_data <- read_parquet("data/02-analysis_data/clean_sakura_data.parquet")
 
+#### Initialize validation flag ####
+all_tests_passed <- TRUE
 
-#### Test data ####
-# Test that the dataset has 151 rows - there are 151 divisions in Australia
-test_that("dataset has 151 rows", {
-  expect_equal(nrow(analysis_data), 151)
-})
+# Test 1: Check for missing values
+cat("Test 1: Checking for missing values...\n")
+missing_values <- clean_sakura_data %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "missing_count")
+print(missing_values)
+if (any(missing_values$missing_count > 0)) {
+  cat("FAILED: Missing values found in the dataset.\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: No missing values found.\n")
+}
 
-# Test that the dataset has 3 columns
-test_that("dataset has 3 columns", {
-  expect_equal(ncol(analysis_data), 3)
-})
+# Test 2: Validate column count
+cat("\nTest 2: Validating column count...\n")
+expected_columns <- c("year", "flowering_date", "avg_temperature",
+                      "day_of_year", "decade", "flowering_range", "source")
+if (ncol(clean_sakura_data) != length(expected_columns)) {
+  cat("FAILED: Column count mismatch. Expected:", length(expected_columns), "but found:", ncol(clean_sakura_data), "\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: Column count matches expectations.\n")
+}
 
-# Test that the 'division' column is character type
-test_that("'division' is character", {
-  expect_type(analysis_data$division, "character")
-})
+# Test 3: Validate `avg_temperature` range
+cat("\nTest 3: Validating avg_temperature range...\n")
+if (!all(clean_sakura_data$avg_temperature >= 5 & clean_sakura_data$avg_temperature <= 15)) {
+  cat("FAILED: Some avg_temperature values are outside the valid range (5-15°C).\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: All avg_temperature values are within the valid range.\n")
+}
 
-# Test that the 'party' column is character type
-test_that("'party' is character", {
-  expect_type(analysis_data$party, "character")
-})
+# Test 4: Validate `day_of_year` range
+cat("\nTest 4: Validating day_of_year range...\n")
+if (!all(clean_sakura_data$day_of_year >= 1 & clean_sakura_data$day_of_year <= 365)) {
+  cat("FAILED: Some day_of_year values are outside the valid range (1-365).\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: All day_of_year values are within the valid range.\n")
+}
 
-# Test that the 'state' column is character type
-test_that("'state' is character", {
-  expect_type(analysis_data$state, "character")
-})
+# Test 5: Validate `flowering_range` categories
+cat("\nTest 5: Validating flowering_range categories...\n")
+expected_flowering_ranges <- c("Early (Jan-Mar)", "Mid (Apr)", "Late (May+)")
+if (!all(clean_sakura_data$flowering_range %in% expected_flowering_ranges)) {
+  cat("FAILED: Unexpected categories found in flowering_range.\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: All flowering_range values are valid.\n")
+}
 
-# Test that there are no missing values in the dataset
-test_that("no missing values in dataset", {
-  expect_true(all(!is.na(analysis_data)))
-})
+# Test 6: Check for duplicate rows
+cat("\nTest 6: Checking for duplicate rows...\n")
+duplicates <- clean_sakura_data %>%
+  duplicated() %>%
+  sum()
+if (duplicates > 0) {
+  cat("FAILED: Found", duplicates, "duplicate rows.\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: No duplicate rows found.\n")
+}
 
-# Test that 'division' contains unique values (no duplicates)
-test_that("'division' column contains unique values", {
-  expect_equal(length(unique(analysis_data$division)), 151)
-})
+# Test 7: Count missing years
+cat("\nTest 7: Checking for missing years...\n")
+expected_years <- seq(min(clean_sakura_data$year), max(clean_sakura_data$year))
+missing_years <- setdiff(expected_years, clean_sakura_data$year)
+if (length(missing_years) > 0) {
+  cat("FAILED: Missing years detected:", paste(missing_years, collapse = ", "), "\n")
+  all_tests_passed <- FALSE
+} else {
+  cat("PASSED: No missing years detected.\n")
+}
 
-# Test that 'state' contains only valid Australian state or territory names
-valid_states <- c("New South Wales", "Victoria", "Queensland", "South Australia", "Western Australia", 
-                  "Tasmania", "Northern Territory", "Australian Capital Territory")
-test_that("'state' contains valid Australian state names", {
-  expect_true(all(analysis_data$state %in% valid_states))
-})
-
-# Test that there are no empty strings in 'division', 'party', or 'state' columns
-test_that("no empty strings in 'division', 'party', or 'state' columns", {
-  expect_false(any(analysis_data$division == "" | analysis_data$party == "" | analysis_data$state == ""))
-})
-
-# Test that the 'party' column contains at least 2 unique values
-test_that("'party' column contains at least 2 unique values", {
-  expect_true(length(unique(analysis_data$party)) >= 2)
-})
+#### Final Test Results ####
+if (all_tests_passed) {
+  cat("\nAll tests passed successfully! The analysis dataset is valid and ready for modeling.\n")
+} else {
+  cat("\nSome tests failed. Please review the issues above and correct the data.\n")
+}
