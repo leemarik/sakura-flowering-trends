@@ -50,12 +50,13 @@ clean_sakura_data <- bind_rows(historical, modern)
 clean_sakura_data <- clean_sakura_data %>%
   left_join(temperatures, by = "year")
 
-# Remove rows with missing flowering dates
-clean_sakura_data <- clean_sakura_data %>% filter(!is.na(flowering_date))
-
-# Clip avg_temperature to valid range
+# Fill missing avg_temperature with temperature_recon
 clean_sakura_data <- clean_sakura_data %>%
-  mutate(avg_temperature = pmin(pmax(avg_temperature, 5), 15))
+  mutate(avg_temperature = ifelse(is.na(avg_temperature), temperature_recon, avg_temperature))
+
+# Remove rows with missing flowering dates or avg_temperatures
+clean_sakura_data <- clean_sakura_data %>%
+  filter(!is.na(flowering_date) & !is.na(avg_temperature))
 
 # Add derived columns
 clean_sakura_data <- clean_sakura_data %>%
@@ -70,10 +71,6 @@ clean_sakura_data <- clean_sakura_data %>%
   ) %>%
   select(year, flowering_date, avg_temperature, day_of_year, 
          decade, flowering_range, source)  
-
-# Filter out rows with all NA values for critical variables
-clean_sakura_data <- clean_sakura_data %>%
-  filter(!is.na(flowering_date) & !is.na(avg_temperature))
 
 # Handle duplicate rows
 clean_sakura_data <- clean_sakura_data %>% distinct()
