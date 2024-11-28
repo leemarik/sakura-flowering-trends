@@ -6,20 +6,12 @@ author:
 thanks: "Code and data are available at: [https://github.com/leemarik/sakura-flowering-trends.git](https://github.com/leemarik/sakura-flowering-trends.git)."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This study uses historical and modern data to analyze the impact of temperature and long-term trends on sakura flowering in Japan. Linear regression highlights a significant shift toward earlier flowering dates, while generalized additive models (GAMs) capture non-linear relationships. Model comparison via AIC favors the GAM, showing its effectiveness in handling complex patterns. Predictions under future climate scenarios (+1°C, +2°C, +3°C) indicate flowering dates may advance by 5–15 days by 2070. These results underscore the sensitivity of sakura flowering to climate change and its broader ecological and cultural implications."
 format: pdf
 number-sections: true
 bibliography: references.bib
 ---
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
-```
 ```{r}
 #| include: false
 #| warning: false
@@ -44,16 +36,17 @@ gam_model <- readRDS("../models/gam_model.rds")
 ```
 
 # Introduction
+In Japan, cherry blossoms, or “sakura,” have been a significant cultural and historical symbol, representing the transient beauty of life. The practice of “hanami,” or flower viewing, dates back centuries. During the Heian period (794-1185), aristocrats would gather to appreciate the blossoms’ fleeting beauty while composing poetry (@japanSakuraHistory). Hanami has developed into a deeply ingrained cultural tradition that transcends social classes, with its economic significance growing in modern times. Recent research by Katsuhiro Miyamoto indicates that the economic impact of hanami in Japan is expected to double this year, highlighting its role as a cultural event and an economic activity (@kaneko2024hanami). 
 
-Overview paragraph
+However, a concerning trend has surfaced in recent decades: sakura blossoming earlier each year, attributed mainly to rising global temperatures. According to The Economist, the earlier blooming of cherry blossoms is closely tied to climate change, raising concerns about the long-term implications for Japan’s cultural heritage and biodiversity (@EconomistCherryBlossoms). This shift in flowering trends serves as a reminder of humanity’s impact on the environment and a pressing scientific challenge to understand the intricate relationships between climate variables and flowering dates. 
 
-Estimand paragraph
+The estimand of this analysis is the relationship between average March temperatures, year, and the Sakura flowering dates. By analyzing centuries of historical and modern sakura data, my goal is to determine how changes in temperature and long-term climate trends have impacted the timing of sakura blooming. Additionally, I aim to forecast future flowering dates under various climate scenarios, providing insights into the potential effects of climate change on this culturally significant phenomenon. 
 
-Results paragraph
+Despite the historical documentation of sakura flowering trends, there is a critical gap in understanding how these changes will evolve in the future under various climate scenarios. This analysis addresses this gap by using historical and modern data on sakura flowering dates and temperatures to determine the impact of climate change on flowering dates. I used statistical modeling techniques of linear regression and generalized additive models (GAMs) to explore the relationship between temperature, year, and flowering dates. These models provide insights into past trends and enable predictions for future scenarios under different temperature increases. 
 
-Why it matters paragraph
+The findings indicate that rising temperatures strongly correlate with earlier blooming dates, which have accelerated over the last century. By modeling these patterns, the analysis offers a framework for predicting future sakura blooming dates and assessing the broader implications of climate change on cultural and ecological systems. This research contributes to scientific understanding and highlights the urgency of climate mitigation efforts to preserve cherished cultural practices like hanami. 
 
-Telegraphing paragraph: The remainder of this paper is structured as follows. @sec-data....
+The structure of this paper is as follows: @sec-data reviews the data sources and preprocessing methods used in this analysis. @sec-model details the modeling approaches, specifically Linear Regression and Generalized Additive Models. @sec-results presents the results, followed by a discussion in @sec-discussion on the implications, limitations, and future directions. 
 
 # Data {#sec-data}
 
@@ -93,7 +86,6 @@ To determine the impact of temperature on sakura flowering dates over centuries 
 ## Linear Regression Model 
 The linear regression model I will be using is:
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
 
 ## Generalized Additive Model (GAM)
 
@@ -104,24 +96,11 @@ Where:
 
 
 
-# Results
+# Results {#sec-results}
 
 
-# Discussion
+# Discussion {#sec-discussion}
 
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-Please don't use these as sub-heading labels - change them to be what your point actually is.
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
 
 \newpage
 
