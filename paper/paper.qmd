@@ -156,9 +156,16 @@ The scenarios were created by extrapolating 50 years ahead of the latest recorde
 
 # Results {#sec-results}
 
+## Distribution of Flowering Dates and Temperatures
+
+To understand the overall distribution of sakura flowering dates, I’ve plotted the frequency of flowering days across the dataset. @fig-flowering-distribution shows that the majority of flowering events occur around the 105th day of the year, corresponding to April 15th. This distribution reflects the sensitivity of sakura to climatic conditions in spring. 
+
+@fig-temperature-distribution represents the distribution of average March temperature showing a concentration around 5–10°C. This temperature range aligns closely with the optimal conditions for sakura blooming, strengthening the relationship between temperature and phenological events.
+
+
 ```{r}
 #| label: fig-flowering-distribution
-#| fig-cap: Distribution of Sakura Flowering Dates
+#| fig-cap: "Distribution of Sakura Flowering Dates"
 #| warning: false 
 #| message: false
 #| fig-align: center
@@ -173,7 +180,143 @@ plot_flowering_distribution <- ggplot(clean_sakura_data, aes(x = day_of_year)) +
   ) +
   theme_minimal()
 
-print(plot_flowering_distribution)
+plot_flowering_distribution
+```
+```{r}
+#| label: fig-temperature-distribution
+#| fig-cap: "Distribution of Average Temperatures in March"
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+clean_sakura_data_filtered <- clean_sakura_data %>%
+  filter(avg_temperature >= 2 & avg_temperature <= 10)
+
+ggplot(clean_sakura_data_filtered, aes(x = avg_temperature)) +
+  geom_histogram(binwidth = 1, fill = "coral", color = "black") +
+  labs(
+    title = "Distribution of Average Temperatures",
+    x = "Average Temperature (°C)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+```
+## Historical Trends in Flowering Dates and Temperatures
+
+Using @fig-flowering-trend, we see a gradual shift in flowering dates over time. Earlier flowering events have become more common, particularly in modern years. This trend, captured by the loess regression, suggests an accelerating response to environmental changes. Similarly, @fig-temperature-trend reveals a steady increase in average March temperatures over the centuries, with notable warming in recent decades.
+
+```{r}
+#| label: fig-flowering-trend
+#| fig-cap: "Trend of Sakura Flowering Dates Over Time"
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+plot_flowering_trend <- ggplot(clean_sakura_data, aes(x = year, y = day_of_year)) +
+  geom_point(alpha = 0.5, color = "darkgreen") +
+  geom_smooth(method = "loess", color = "blue", se = TRUE) +
+  labs(
+    title = "Trend of Sakura Flowering Dates Over Time",
+    x = "Year",
+    y = "Day of Year (Flowering Date)"
+  ) +
+  theme_minimal()
+
+plot_flowering_trend
+```
+
+```{r}
+#| label: fig-temperature-trend
+#| fig-cap: "Trend of Average Temperatures Over Time"
+#| warning: false 
+#| message: false
+#| fig-align: center
+#| 
+plot_temperature_trend <- ggplot(clean_sakura_data, aes(x = year, y = avg_temperature)) +
+  geom_point(alpha = 0.5, color = "darkorange") +
+  geom_smooth(method = "loess", color = "red", se = TRUE) +
+  labs(
+    title = "Trend of Average Temperatures Over Time",
+    x = "Year",
+    y = "Average Temperature (°C)"
+  ) +
+  theme_minimal()
+plot_temperature_trend
+
+```
+
+## Relationship Between Temperature and Flowering Dates
+
+
+```{r}
+#| label: fig-temp-vs-flowering
+#| fig-cap: "Relationship Between Temperature and Flowering Date"
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+plot_temp_vs_flowering <- ggplot(clean_sakura_data, aes(x = avg_temperature, y = day_of_year)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", color = "black", se = TRUE) +
+  labs(
+    title = "Relationship Between Temperature and Flowering Date",
+    x = "Average Temperature (°C)",
+    y = "Day of Year (Flowering Date)"
+  ) +
+  theme_minimal()
+
+plot_temp_vs_flowering
+
+```
+
+
+## Historical vs. Modern Data Comparison
+
+```{r}
+#| label: fig-flowering-source
+#| fig-cap: "Comparison of Flowering Dates by Data Source"
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+plot_flowering_source <- ggplot(clean_sakura_data, aes(x = source, y = day_of_year, fill = source)) +
+  geom_boxplot() +
+  labs(
+    title = "Comparison of Flowering Dates by Data Source",
+    x = "Source",
+    y = "Day of Year (Flowering Date)"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("historical" = "lightblue", "modern" = "lightgreen"))
+
+plot_flowering_source
+
+```
+
+## Flowering Ranges Across Decades
+
+```{r}
+#| label: fig-flowering-decade
+#| fig-cap: "Flowering Range by Decade"
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+plot_flowering_decade <- clean_sakura_data %>%
+  count(decade, flowering_range) %>%
+  ggplot(aes(x = decade, y = n, fill = flowering_range)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Flowering Range by Decade",
+    x = "Decade",
+    y = "Count",
+    fill = "Flowering Range"
+  ) +
+  theme_minimal()
+
+plot_flowering_decade
+
 ```
 
 # Discussion {#sec-discussion}
