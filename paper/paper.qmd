@@ -156,6 +156,26 @@ The scenarios were created by extrapolating 50 years ahead of the latest recorde
 
 # Results {#sec-results}
 
+```{r}
+#| label: fig-flowering-distribution
+#| fig-cap: Distribution of Sakura Flowering Dates
+#| warning: false 
+#| message: false
+#| fig-align: center
+
+
+plot_flowering_distribution <- ggplot(clean_sakura_data, aes(x = day_of_year)) +
+  geom_histogram(binwidth = 5, fill = "steelblue", color = "black") +
+  labs(
+    title = "Distribution of Sakura Flowering Dates",
+    x = "Day of Year (Flowering Date)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+print(plot_flowering_distribution)
+```
+
 # Discussion {#sec-discussion}
 
 
