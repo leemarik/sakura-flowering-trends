@@ -1,8 +1,10 @@
-# Sakura Flowering Trends
+# Sakura Flowering Trend Analysis
 
 ## Overview
 
-This study analyzes the long-term trends and their relationship with climate change using data of over 1,200 years of cherry blossom (sakura) flowering dates in Kyoto sourced from the [Alex Cookson’s datasets](https://github.com/tacookson/data).
+This project explores the relationship between historical and modern sakura (cherry blossom) flowering dates and climate change, focusing on how warming temperatures impact phenological patterns. Combining historical records from Kyoto (dating back to 812 CE) and modern observations from the Japan Meteorological Agency, the analysis examines trends in flowering dates, their relationship with March temperatures, and the implications for future climate scenarios.
+
+The analysis uses the data `sakura-historical`, `sakura-modern`, and `temperatures-modern` soured from [Alex Cookson's dataset](https://github.com/tacookson/data).
 
 ## File Structure
 
