@@ -166,6 +166,7 @@ To understand the overall distribution of sakura flowering dates, I’ve plotted
 ```{r}
 #| label: fig-flowering-distribution
 #| fig-cap: "Distribution of Sakura Flowering Dates"
+#| echo: false
 #| warning: false 
 #| message: false
 #| fig-align: center
@@ -185,6 +186,7 @@ plot_flowering_distribution
 ```{r}
 #| label: fig-temperature-distribution
 #| fig-cap: "Distribution of Average Temperatures in March"
+#| echo: false
 #| warning: false 
 #| message: false
 #| fig-align: center
@@ -211,6 +213,7 @@ ggplot(clean_sakura_data_filtered, aes(x = avg_temperature)) +
 ```{r}
 #| label: fig-flowering-trend
 #| fig-cap: "Trend of Sakura Flowering Dates Over Time"
+#| echo: false
 #| warning: false 
 #| message: false
 #| fig-align: center
@@ -231,10 +234,11 @@ plot_flowering_trend
 ```{r}
 #| label: fig-temperature-trend
 #| fig-cap: "Trend of Average Temperatures Over Time"
+#| echo: false
 #| warning: false 
 #| message: false
 #| fig-align: center
-#| 
+
 plot_temperature_trend <- ggplot(clean_sakura_data, aes(x = year, y = avg_temperature)) +
   geom_point(alpha = 0.5, color = "darkorange") +
   geom_smooth(method = "loess", color = "red", se = TRUE) +
@@ -255,6 +259,7 @@ plot_temperature_trend
 ```{r}
 #| label: fig-flowering-source
 #| fig-cap: "Comparison of Flowering Dates by Data Source"
+#| echo: false
 #| warning: false 
 #| message: false
 #| fig-align: center
