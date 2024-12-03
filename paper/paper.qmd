@@ -204,7 +204,9 @@ ggplot(clean_sakura_data_filtered, aes(x = avg_temperature)) +
 ```
 ## Historical Trends in Flowering Dates and Temperatures
 
-Using @fig-flowering-trend, we see a gradual shift in flowering dates over time. Earlier flowering events have become more common, particularly in modern years. This trend, captured by the loess regression, suggests an accelerating response to environmental changes. Similarly, @fig-temperature-trend reveals a steady increase in average March temperatures over the centuries, with notable warming in recent decades.
+@fig-flowering-trend shows the trend of sakura flowering dates across recorded history. The data presents consistency in flowering patterns until the late 20th century, with minor fluctuations attributable to natural climate variability. However, there was a shift in the modern era, where flowering dates have advanced significantly earlier in the year. This acceleration in phenological changes aligns with evidence of climate change, as warmer temperatures can progress earlier in flowering. The loess smoothing line emphasizes this trend, showing a stable period historically followed by a marked decline in flowering dates over the last century. 
+
+@fig-temperature-trend captures the trajectory of average temperature over time, providing context for the shifts in flowering dates. Similar to the flowering date trends, temperature records remain relatively stable until the onset of industrialization. From approximately 1750 onward, a gradual warming trend ended in a sharp rise in the 20th century. This dramatic increase correlates with the earlier flowering patterns observed in @fig-flowering-trend. 
 
 ```{r}
 #| label: fig-flowering-trend
@@ -246,32 +248,9 @@ plot_temperature_trend
 
 ```
 
-## Relationship Between Temperature and Flowering Dates
-
-
-```{r}
-#| label: fig-temp-vs-flowering
-#| fig-cap: "Relationship Between Temperature and Flowering Date"
-#| warning: false 
-#| message: false
-#| fig-align: center
-
-plot_temp_vs_flowering <- ggplot(clean_sakura_data, aes(x = avg_temperature, y = day_of_year)) +
-  geom_point(alpha = 0.5, color = "purple") +
-  geom_smooth(method = "lm", color = "black", se = TRUE) +
-  labs(
-    title = "Relationship Between Temperature and Flowering Date",
-    x = "Average Temperature (°C)",
-    y = "Day of Year (Flowering Date)"
-  ) +
-  theme_minimal()
-
-plot_temp_vs_flowering
-
-```
-
-
 ## Historical vs. Modern Data Comparison
+
+@fig-flowering-source compares flowering dates between historical and modern data sources. The boxplot reveals that historical flowering dates are more tightly clustered around the median, with less variability compared to modern data. The broader variability of flowering dates in modern data suggests that the sakura phenology is increasingly sensitive to environmental changes in the modern era. 
 
 ```{r}
 #| label: fig-flowering-source
@@ -294,32 +273,14 @@ plot_flowering_source
 
 ```
 
-## Flowering Ranges Across Decades
-
-```{r}
-#| label: fig-flowering-decade
-#| fig-cap: "Flowering Range by Decade"
-#| warning: false 
-#| message: false
-#| fig-align: center
-
-plot_flowering_decade <- clean_sakura_data %>%
-  count(decade, flowering_range) %>%
-  ggplot(aes(x = decade, y = n, fill = flowering_range)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(
-    title = "Flowering Range by Decade",
-    x = "Decade",
-    y = "Count",
-    fill = "Flowering Range"
-  ) +
-  theme_minimal()
-
-plot_flowering_decade
-
-```
-
 # Discussion {#sec-discussion}
+The study revealed a consistent advancement in sakura flowering dates, particularly in modern data, driven by the rise in temperatures. Historical data showed stable patterns, while modern data indicated broader variability, likely due to several factors such as urbanization and environmental factors. These results highlight the sensitivity of sakura phenology to climate change and the increasing complexity of predicting the shift. 
+
+## Weaknesses
+Limitations include potential biases in historical data due to inconsistent and missing recording methods, geographic gaps, and modern data skewed toward urbanized areas. The analysis also lacked consideration of other environmental variables, such as precipitation and soil conditions, and other human interactions that could impact flowering dates.
+
+## Future Directions 
+Future research could expand on considering human factors and other geographical factors. Incorporating variables like precipitation, human movement in the area, and integrating climate models could improve predictive accuracy. 
 
 
 \newpage
