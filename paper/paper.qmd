@@ -9,6 +9,7 @@ date-format: long
 abstract: "This study uses historical and modern data to analyze the impact of temperature and long-term trends on sakura flowering in Japan. Linear regression highlights a significant shift toward earlier flowering dates, while generalized additive models (GAMs) capture non-linear relationships. Model comparison via AIC favors the GAM, showing its effectiveness in handling complex patterns. Predictions under future climate scenarios (+1°C, +2°C, +3°C) indicate flowering dates may advance by 5–15 days by 2070. These results underscore the sensitivity of sakura flowering to climate change and its broader ecological and cultural implications."
 format: pdf
 number-sections: true
+toc: true
 bibliography: references.bib
 ---
 
@@ -50,7 +51,7 @@ Despite the historical documentation of sakura flowering trends, there is a crit
 
 The findings indicate that rising temperatures strongly correlate with earlier blooming dates, which have accelerated over the last century. By modeling these patterns, the analysis offers a framework for predicting future sakura blooming dates and assessing the broader implications of climate change on cultural and ecological systems. This research contributes to scientific understanding and highlights the urgency of climate mitigation efforts to preserve cherished cultural practices like hanami. 
 
-The structure of this paper is as follows: @sec-data reviews the data sources and preprocessing methods used in this analysis. @sec-model details the modeling approaches, specifically Linear Regression and Generalized Additive Models. @sec-results presents the results, followed by a discussion in @sec-discussion on the implications, limitations, and future directions. 
+The structure of this paper is as follows: @sec-data reviews the data sources and preprocessing methods used in this analysis. @sec-model details the modeling approaches, specifically Linear Regression and Generalized Additive Models. @sec-results presents the results, followed by a discussion in @sec-discussion on the implications, limitations, and future directions. Further details on model and dataset will be discussed in @sec-appendix. 
 
 # Data {#sec-data}
 ## Overview
@@ -131,7 +132,7 @@ By comparing the two models, the GAM was a better choice for capturing the compl
 To ensure the reliability of the models, I performed the following evaluation and validation steps:
 
 **Model Performance Metrics:** 
-For the linear regression model, the adjusted `R^2` was 0.0136, indicating a weak fit to the data. The residual standard error was 28.18 days, highlighting high variability in flowering dates not explained by the model. The GAM improved the adjusted `R^2` to 0.0411, explaining 4.36% of the deviance. While small, this improvement shows the GAM’s ability to capture non-linear trends lacking in the linear model. 
+For the linear regression model, the adjusted $R^{2}$ was 0.0136, indicating a weak fit to the data. The residual standard error was 28.18 days, highlighting high variability in flowering dates not explained by the model. The GAM improved the adjusted $R^{2}$ to 0.0411, explaining 4.36% of the deviance. While small, this improvement shows the GAM’s ability to capture non-linear trends lacking in the linear model. 
 
 **Diagnostics:**
 Residual plots showed a non-random pattern, suggesting the presence of a non-linear relationship and the need for a more flexible model in the linear regression model. For the GAM, the residual checks confirmed model convergence, with all smooth terms for `avg_temperature` and `year` showing significant contributions (p<0.001). The basis dimension tests indicated no under-smoothing, making sure that the model captured the complexity of the data.
@@ -147,7 +148,8 @@ The GAM slightly outperformed the linear regression model, as indicated by lower
 ## Future Predictions
 To explore the impact of climate change on sakura flowering dates, the GAM was extended to simulate hypothetical future scenarios. These scenarios predict the timing of sakura flowering under varying levels of temperature increases over the next 50 years. This approach provides critical insights into the sensitivity of sakura phenology to climate change.
 
-Future predictions were based on three hypothetical warming scenarios:
+Future predictions were based on three hypothetical warming scenarios:  
+
 - +1°C: A moderate temperature increase.
 - +2°C: A significant increase in average temperature.
 - +3°C: A severe climate change scenario.
@@ -292,9 +294,33 @@ Future research could expand on considering human factors and other geographical
 
 \appendix
 
-# Appendix {-}
+# Appendix {#sec-appendix}
 
+## Survey, Sampling, and Observational Data
+The analysis of the Sakura flowering trend explores phenological changes in sakura flowering dates using a combination of historical and modern datasets. Below, I detail the sampling methodologies and observational techniques. 
 
+### Historical Data
+The historical sakura flowering dataset relies on secondary observations documented in diaries, hanami (flower-viewing) records, and cultural archives from Kyoto, dating back to 812. The flowering dates were reconstructed by paleoclimatologist Prof. Yasuyuki Aono (@yasuyukiphenology15), who used these observations to estimate March temperatures. These records represent non-probabilistic sampling, as they reflect the specific cultural practices of elite Japanese society and their interaction with nature. The dataset’s strengths include its temporal depth of the unique 1,200-year timeline and the cultural significance of its direct connections to human activity, making it highly relevant for climate impact studies. However, limitations arise from geographic bias, where the data is exclusively from Kyoto, limiting generalizability and sampling gaps, where variations in recordkeeping over centuries, including periods with sparse documentation. 
+
+### Modern Data
+Modern flowering records from the Japan Meteorological Agency (@JapanMeteorAgency) cover nationwide observations from 1953 to 2019. JMA uses systematic, probabilistic sampling by selecting stations across Japan to record flowering dates and related phenological phenomena. Key aspects include consistency of standardized protocols for determining the “first flowering” stage and the broad coverage where data spans multiple climatic zones, from Kyushu in the south to Hokkaido in the north. 
+
+### Observational Data Methods
+Modern observational data incorporates measurements of Average Monthly Temperatures collected from the Japan Meteorological Agency’s Station Data (@JapanMeteorAgency). Phenological Markers were defined by the ‘Biological Phenological Observation Guidelines’ to ensure consistency in reporting flowering stages. 
+
+To validate the reliability of these observational methods, posterior predictive checks were applied to ensure consistency in modern data trends. 
+
+## Simulations
+Simulations of future flowering dates (+1°C, +2°C, +3°C scenarios) rely on existing literature linking phenology to climate (@yasuyukiphenology15). These simulations emphasize the sensitivity of flowering dates to March temperatures, corroborating findings from prior studies. The results align with paleoclimatic models used in historical reconstructions, bridging the gap between observational and modeled data.
+
+#### Predictive Simulations
+Under hypothetical temperature increases, predictions showed a clear advancement in flowering dates:  
+
+- +1°C: Flowering dates shifted earlier by 5–7 days.
+- +2°C: Shifts of 10–12 days were observed.
+- +3°C: The most dramatic change, with flowering advancing by up to 15 days.
+
+These simulations validate the model's ability to capture the non-linear relationships between temperature and phenological changes.
 
 \newpage
 
